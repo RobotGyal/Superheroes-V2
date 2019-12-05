@@ -16,7 +16,6 @@ class Ability:
       random_value = random.randint(0,self.max_damage)
       return random_value
 
-
 class Armor:
     def __init__(self, name, max_block):
         '''Instantiate instance properties.
@@ -184,29 +183,111 @@ class Team:
             living_opponents.append(hero)
 
         while len(living_heroes) > 0 and len(living_opponents)> 0:
-            # TODO: Complete the following steps:
-            # 1) Randomly select a living hero from each team (hint: look up what random.choice does)
-            # 2) have the heroes fight each other (Hint: Use the fight method in the Hero class.)
-            # 3) update the list of living_heroes and living_opponents
-            # to reflect the result of the fight
-            hero1 = random.choice(living_heroes)
-            hero2 = random.choice(living_opponents)
-            hero1.fight(hero2)
+            hero = random.choice(living_heroes)
+            opponent = random.choice(living_opponents)
+            hero.fight(opponent)
 
+class Arena:
+    def __init__(self):
+        '''Instantiate properties
+            team_one: None
+            team_two: None
+        '''
+        self.team_one = None
+        self.team_two = None
 
+    def create_ability(self):
+        '''Prompt for Ability information.
+            return Ability with values from user Input
+        '''
+        ability = input("What is the ability name?  ")
+        max_damage = input("What is the max damage of the ability?  ")
 
+        return Ability(ability, max_damage)
 
+    def create_weapon(self):
+        '''Prompt user for Weapon information
+            return Weapon with values from user input.
+        '''
+        weapon = input("What is the name of the weapon?")
+        max_damage = input("What is the max damage of the weapon?")
+        return Weapon(weapon, max_damage)
 
+    def create_armor(self):
+        '''Prompt user for Armor information
+          return Armor with values from user input.
+        '''
+        armor = input("What type of armor will you add to your hero?")
+        max_block = input("What is the max block foor the armor?")
+        return Armor(armor, max_block)
 
+    def create_hero(self):
+        '''Prompt user for Hero information
+          return Hero with values from user input.
+        '''
+        hero_name = input("Hero's name: ")
+        hero = Hero(hero_name)
+        add_item = None
+        while add_item != "4":
+           add_item = input("[1] Add ability\n[2] Add weapon\n[3] Add Armor\n[4] Done adding items\n\nYour choice: ")
+           if add_item == "1":
+               ability = self.create_ability()
+               hero.add_ability(ability)
+           elif add_item == "2":
+               weapon = self.create_weapon()
+               hero.add_weapon(weapon)
+           elif add_item == "3":
+               armor = self.create_armor()
+               hero.add_armor(armor)
+        return hero
+
+    def build_team_one(self):
+        name = input("\nWhat is the name of Team 1? ")
+        team_one_size = input("How many heros do you want on your first team?  ")
+        self.team_one = Team(name)
+        for hero in range(int(team_one_size)):
+            self.create_hero()
+            self.team_one.add_hero(hero)
+
+    def build_team_two(self):
+        name = input("\nWhat is the name of Team 2? ")
+        team_two_size = input("How many heros do you want on your second team?  ")
+        self.team_two = Team(name)
+        for hero in range(int(team_two_size)):
+            self.create_hero()
+            self.team_two.add_hero(hero)
+
+    def team_battle(self):
+        self.team_one.attack(self.team_two)
+
+    def show_stats(self):
+        '''Prints team statistics to terminal.'''
+        # TODO: This method should print out battle statistics
+        # including each team's average kill/death ratio.
+        # Required Stats:
+        #     Show surviving heroes.
+        #     Declare winning team
+        #     Show both teams average kill/death ratio.
+        # Some help on how to achieve these tasks:
+        # TODO: for each team, loop through all of their heroes,
+        # and use the is_alive() method to check for alive heroes,
+        # printing their names and increasing the count if they're alive.
+        #
+        # TODO: based off of your count of alive heroes,
+        # you can see which team has more alive heroes, and therefore,
+        # declare which team is the winning team
+        #
+        # TODO for each team, calculate the total kills and deaths for each hero,
+        # find the average kills and deaths by dividing the totals by the number of heroes.
+        # finally, divide the average number of kills by the average number of deaths for each team
+        pass
 
 
 
 
 if __name__ == "__main__":
-    # If you run this file from the terminal
-    # this block of code is executed.
-
-    hero = Hero("Wonder Woman")
-    weapon = Weapon("Lasso of Truth", 90)
-    hero.add_weapon(weapon)
-    print(hero.attack())
+    arena = Arena()
+    arena.build_team_one()
+    arena.build_team_two()
+    arena.team_battle()
+    # arena.show_stats()
