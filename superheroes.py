@@ -8,12 +8,12 @@ class Ability:
         '''
 
         self.name = name
-        self.max_damage = attack_strength
+        self.max_damage = int(attack_strength)
 
     def attack(self):
       ''' Return a value between 0 and the value set by self.max_damage.'''
 
-      random_value = random.randint(0,self.max_damage)
+      random_value = random.randint(0, self.max_damage)
       return random_value
 
 class Armor:
@@ -184,6 +184,9 @@ class Team:
 
         while len(living_heroes) > 0 and len(living_opponents)> 0:
             hero = random.choice(living_heroes)
+            # print(self.heroes[hero])
+            # print(hero.name)
+            # print(self.heroes)
             opponent = random.choice(living_opponents)
             hero.fight(opponent)
 
@@ -193,8 +196,8 @@ class Arena:
             team_one: None
             team_two: None
         '''
-        self.team_one = None
-        self.team_two = None
+        self.team_one = list()
+        self.team_two = list()
 
     def create_ability(self):
         '''Prompt for Ability information.
@@ -245,16 +248,17 @@ class Arena:
         name = input("\nWhat is the name of Team 1? ")
         team_one_size = input("How many heros do you want on your first team?  ")
         self.team_one = Team(name)
-        for hero in range(int(team_one_size)):
-            self.create_hero()
+        for _ in range(int(team_one_size)):
+            hero = self.create_hero()
             self.team_one.add_hero(hero)
+        return self.team_one
 
     def build_team_two(self):
         name = input("\nWhat is the name of Team 2? ")
         team_two_size = input("How many heros do you want on your second team?  ")
         self.team_two = Team(name)
-        for hero in range(int(team_two_size)):
-            self.create_hero()
+        for _ in range(int(team_two_size)):
+            hero = self.create_hero()
             self.team_two.add_hero(hero)
 
     def team_battle(self):
