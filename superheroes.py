@@ -1,5 +1,10 @@
 import random
 
+class colors:
+    purple = '\033[35m'
+    grey = '\033[37m'
+    red='\033[31m'
+
 class Ability:
     def __init__(self, name, attack_strength):
         '''
@@ -247,17 +252,17 @@ class Arena:
 
     def build_team_one(self):
         name = input("\nWhat is the name of Team 1? ")
-        team_one_size = input("How many heros do you want on your first team?  ")
+        self.team_one_size = input("How many heros do you want on your first team?  ")
         self.team_one = Team(name)
-        for _ in range(int(team_one_size)):
+        for _ in range(int(self.team_one_size)):
             hero = self.create_hero()
             self.team_one.add_hero(hero)
 
     def build_team_two(self):
         name = input("\nWhat is the name of Team 2? ")
-        team_two_size = input("How many heros do you want on your second team?  ")
+        self.team_two_size = input("How many heros do you want on your second team?  ")
         self.team_two = Team(name)
-        for _ in range(int(team_two_size)):
+        for _ in range(int(self.team_two_size)):
             hero = self.create_hero()
             self.team_two.add_hero(hero)
 
@@ -270,37 +275,89 @@ class Arena:
             self.winner = self.team_two.name
             return self.winner
 
-    def show_stats(self):
+    # def show_stats(self):
         '''Prints team statistics to terminal.'''
-        # TODO: This method should print out battle statistics
-        # including each team's average kill/death ratio.
-        # Required Stats:
-        #     Show surviving heroes.
-        #     Declare winning team
-        #     Show both teams average kill/death ratio.
-        # Some help on how to achieve these tasks:
-        # TODO: for each team, loop through all of their heroes,
-        # and use the is_alive() method to check for alive heroes,
-        # printing their names and increasing the count if they're alive.
-        #
-        # TODO: based off of your count of alive heroes,
-        # you can see which team has more alive heroes, and therefore,
-        # declare which team is the winning team
-        #
-        # TODO for each team, calculate the total kills and deaths for each hero,
-        # find the average kills and deaths by dividing the totals by the number of heroes.
-        # finally, divide the average number of kills by the average number of deaths for each team
+
+        print(colors.red)
+
         self.team_one.stats()
         self.team_two.stats()
+
+        team_one_alive = 0
+        team_two_alive = 0
+
+        print(f"Team {self.team_one.name} alive heros: ")
+        for hero in self.heroes:
+            if hero.is_alive():
+                print(hero.name)
+                team_one_alive +=1
+                
+        print(f"Team {self.team_two.name} alive heros: ")
+        for hero in self.team_two:
+            if hero.is_alive():
+                print(hero.name)
+                team_two_alive +=1
+
+        if team_one_alive > team_two_alive:
+            print(f"Team {self.team_one.name} has Won!")
+        elif team_one_alive < team_two_alive:
+            print(f"Team {self.team_two.name} has Won!")
+        else:
+            print("The two teams have come to a DRAW!")
+
+        team_one_total_kills = 0
+        team_two_total_kills = 0
+        team_one_total_deaths = 0
+        team_two_total_deaths = 0
+
+        for hero in self.team_one:
+            team_one_total_kills += hero.kills
+            team_one_total_deaths += hero.deaths
+
+        for hero in self.team_two:
+            team_two_total_kills += hero.kills
+            team_two_total_deaths += hero.deaths
+
+        team_one_avg_kills = team_one_total_kills/self.team_one_size
+        team_two_avg_kills = team_two_total_kills/self.team_two_size
+        team_one_kd = team_one_total_kills/team_one_total_deaths
+        team_two_kd = team_two_total_kills/team_two_total_deaths
+
+        print(f"Team {self.team_one.name} avergae kills is {team_one_avg_kills}".format())
+        print(f"Team {self.team_one.name} kill/death ratio is {team_one_kd}".format())
+        print(f"Team {self.team_two.name} avergae kills is {team_two_avg_kills}".format())
+        print(f"Team {self.team_two.name} kill/death ratio is {team_two_kd}".format())
+
+
+        
+            
+
         
 
 
 
 
 if __name__ == "__main__":
+    game_is_running = True
+
+    # Instantiate Game Arena
     arena = Arena()
+
+    #Build Teams
     arena.build_team_one()
     arena.build_team_two()
-    arena.team_battle()
-    
-    arena.show_stats()
+
+    while game_is_running:
+
+        arena.team_battle()
+        # arena.show_stats()
+        play_again = input("Play Again? Y or N: ")
+
+        #Check for Player Input
+        if play_again.lower() == "n":
+            game_is_running = False
+
+        else:
+            #Revive heroes to play again
+            arena.team_one.revive_heroes()
+            arena.team_two.revive_heroes()
