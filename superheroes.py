@@ -129,7 +129,7 @@ class Hero:
 
     def add_death(self, num_deaths):
         ''' Update deaths with num_deaths'''
-        self.kills += num_deaths
+        self.deaths += num_deaths
 
 class Team:
     def __init__(self, name):
@@ -162,14 +162,14 @@ class Team:
     def stats(self):
         '''Print team statistics'''
         for hero in self.heroes:
-            print("Hero: ", hero.name)
-            print("Number of kills: ", str(hero.kills))
-            print ("Number of deaths: ", str(hero.deaths))
+            print(f"\nHero: {hero.name}".format())
+            print(f"Number of kills:  {str(hero.kills)}".format())
+            print (f"Number of deaths: {str(hero.deaths)}".format())
             if hero.deaths == 0:
-                print("No deaths and {hero.kills} kills")
+                print(f"No deaths and {hero.kills} kills".format())
             else:
                 kd = hero.kills / hero.deaths
-                print("Kill/Deaths: ", kd)
+                print(f"Kill/Death Ratio: {kd}".format())
 
     def survivors(self):
         living = list()
